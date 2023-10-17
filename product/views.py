@@ -1,7 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework import permissions, response
+from rest_framework import permissions, response, generics
 from rest_framework.decorators import action
-from .models import Product
+from .models import Product, ProductRequest
+from .serializers import ProductRequestSerializer
 from . import serializers
 from .permissions import IsAuthor
 # Create your views here.
@@ -33,3 +34,13 @@ class ProductViewSet(ModelViewSet):
         review = product.reviews.get(owner=user)
         review.delete()
         return response.Response('Successfully deleted', status=204)
+
+
+class ProductRequestListCreateView(generics.ListCreateAPIView):
+    queryset = ProductRequest.objects.all()
+    serializer_class = ProductRequestSerializer
+
+
+class ProductRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ProductRequest.objects.all()
+    serializer_class = ProductRequestSerializer
